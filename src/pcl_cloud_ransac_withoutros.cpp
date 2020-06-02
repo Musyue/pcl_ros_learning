@@ -12,7 +12,7 @@
 #include <pcl/common/common_headers.h>
 #include <pcl/features/normal_3d.h>
 #include <pcl/visualization/pcl_visualizer.h>
-boost::shared_ptr<pcl::visualization::PCLVisualizer> customColourVis (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud,pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud2)
+boost::shared_ptr<pcl::visualization::PCLVisualizer> customColourVis (pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud,pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud2,pcl::PointCloud<pcl::PointXYZ>::ConstPtr cloud3)
 {
 
   boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer (new pcl::visualization::PCLVisualizer ("3D Viewer"));
@@ -20,10 +20,15 @@ boost::shared_ptr<pcl::visualization::PCLVisualizer> customColourVis (pcl::Point
 
   pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color(cloud, 255, 0, 0);
   pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color1(cloud2, 0, 255, 255);
+  pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> single_color2(cloud3, 0, 0, 0);
   viewer->addPointCloud<pcl::PointXYZ> (cloud, single_color, "after rasanc");
 
   viewer->addPointCloud<pcl::PointXYZ> (cloud2, single_color1, "initial cloud");
+  // viewer->addPointCloud<pcl::PointXYZ> (cloud3, single_color2, "normal cloud");
   viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 3, "after rasanc");
+  viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "normal cloud");
+  viewer->setPointCloudRenderingProperties (pcl::visualization::PCL_VISUALIZER_POINT_SIZE, 1, "initial cloud");
+  
   viewer->addCoordinateSystem (1.0);
   viewer->initCameraParameters ();
   return (viewer);
@@ -35,7 +40,8 @@ main (int argc, char** argv)
                                         cloud_filtered (new pcl::PointCloud<pcl::PointXYZ>);
     pcl::PCDReader reader;
     pcl::PointCloud<pcl::PointXYZ>::Ptr aftercloud(new pcl::PointCloud<pcl::PointXYZ>);
-     boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr normalcloud(new pcl::PointCloud<pcl::PointXYZ>);
+    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer;
     reader.read ("model9.pcd", *cloud);
     // Build a filter to remove spurious NaNs
     pcl::PassThrough<pcl::PointXYZ> pass;
@@ -65,9 +71,14 @@ main (int argc, char** argv)
     <<coefficients->values[1] << " "
     <<coefficients->values[2] << " " 
     <<coefficients->values[3] <<std::endl;
+
     aftercloud->width  = inliers->indices.size ();
     aftercloud->height = 1;
     aftercloud->points.resize(aftercloud->width * aftercloud->height);
+
+    normalcloud->width  = inliers->indices.size ();
+    normalcloud->height = 1;
+    normalcloud->points.resize(normalcloud->width * normalcloud->height);
     for (size_t i = 0; i < inliers->indices.size (); ++i)
     {
         // std::cerr << inliers->indices[i]<< "    " <<cloud_filtered->points[inliers->indices[i]].x << " "
@@ -76,6 +87,11 @@ main (int argc, char** argv)
         aftercloud->points[i].x=cloud_filtered->points[inliers->indices[i]].x;
         aftercloud->points[i].y=cloud_filtered->points[inliers->indices[i]].y;
         aftercloud->points[i].z=cloud_filtered->points[inliers->indices[i]].z;
+        //ax+by+cz+d=0
+        normalcloud->points[i].x = 0+cloud_filtered->points[inliers->indices[i]].x*coefficients->values[0];//cloud_filtered->points[inliers->indices[i]].x;
+        normalcloud->points[i].y= 0+cloud_filtered->points[inliers->indices[i]].y*coefficients->values[1];//-coefficients->values[3]-coefficients->values[2]*cloud_filtered->points[inliers->indices[i]].z-coefficients->values[0]*normalcloud->points[i].x;//(-normalcloud->points[i].x*coefficients->values[0]-coefficients->values[3]+coefficients->values[3])/coefficients->values[1];
+        normalcloud->points[i].z= -coefficients->values[3]/coefficients->values[2]+ cloud_filtered->points[inliers->indices[i]].z*coefficients->values[2];//cloud_filtered->points[inliers->indices[i]].z;//-coefficients->values[3]/coefficients->values[2];
+
     }
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_1 (new pcl::PointCloud<pcl::PointXYZ>);
     //利用ExtractIndices根据索引进行点云的提取
@@ -86,7 +102,7 @@ main (int argc, char** argv)
     extract.filter(*cloud_1);
     pcl::PCDWriter writer;
     writer.write ("after_rasanc.pcd", *cloud_1, false);
-    viewer = customColourVis(aftercloud,cloud_filtered);
+    viewer = customColourVis(aftercloud,cloud_filtered,normalcloud);
     while (!viewer->wasStopped ())
     {
         viewer->spinOnce (100);
