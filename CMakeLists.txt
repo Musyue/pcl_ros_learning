@@ -237,7 +237,31 @@ add_executable(pcl_oct_tree_without_ros_simple src/pcl_oct_tree_without_ros_simp
 add_executable(pcl_octree_change_detection src/pcl_octree_change_detection.cpp)
 add_executable(pcl_cloud_view_without_ros src/pcl_cloud_view_without_ros.cpp)
 add_executable(pcl_cloud_viewimage_without_ros  src/pcl_cloud_viewimage_without_ros.cpp)
+add_executable(pairwise_incremental_registration src/chapter11/pairwise_incremental_registration.cpp)
+add_executable(iterative_closest_point src/chapter11/iterative_closest_point.cpp)
+
+add_executable(narf_keypoint_extraction  src/chapter8/narf_keypoint_extraction.cpp)
+add_executable(statistical_removal src/chapter6/statistical_removal.cpp)
+add_executable(crop_hull src/chapter6/crop_hull.cpp)
+add_executable(greedy_projection src/chapter7/greedy_projection.cpp)
+add_executable(sift_keypoint src/chapter8/sift_keypoint.cpp)
+
+# add_executable(harris src/chapter8/harris.cpp)
+add_executable(correspondence_grouping src/chapter8/correspondence_grouping.cpp)
+
+target_link_libraries(iterative_closest_point ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(pairwise_incremental_registration ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+target_link_libraries(correspondence_grouping ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+# target_link_libraries(harris ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(sift_keypoint ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(narf_keypoint_extraction ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(crop_hull ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(greedy_projection ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
 target_link_libraries(pcl_create ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(statistical_removal ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
 target_link_libraries(pcl_cloud_ransac_withoutros ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 target_link_libraries(pcl_cloud_view_without_ros_rgb ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 target_link_libraries(pcl_concave_hull_2d_without_ros ${catkin_LIBRARIES} ${PCL_LIBRARIES})
