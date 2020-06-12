@@ -115,7 +115,7 @@ catkin_package(
 ###########
 ## Build ##
 ###########
-find_package(PCL 1.11 REQUIRED COMPONENTS)
+find_package(PCL 1.8.1 REQUIRED COMPONENTS)
 include_directories(include ${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 
@@ -249,9 +249,9 @@ message(STATUS "Pcl lib:${PCL_INCLUDE_DIRS}")
 # # add_executable(harris src/chapter8/harris.cpp)
 # add_executable(correspondence_grouping src/chapter8/correspondence_grouping.cpp)
 # add_executable(resampling src/chapter13/resampling.cpp)
-# add_executable(bspline_fitting src/chapter13/bspline_fitting.cpp)
+add_executable(bspline_fitting src/chapter13/bspline_fitting.cpp)
 
-# target_link_libraries(bspline_fitting ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+target_link_libraries(bspline_fitting ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 # target_link_libraries(resampling ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 # target_link_libraries(iterative_closest_point ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 # target_link_libraries(pairwise_incremental_registration ${catkin_LIBRARIES} ${PCL_LIBRARIES})
