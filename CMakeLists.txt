@@ -247,9 +247,20 @@ add_executable(sift_keypoint src/chapter8/sift_keypoint.cpp)
 add_executable(correspondence_grouping src/chapter8/correspondence_grouping.cpp)
 add_executable(resampling src/chapter13/resampling.cpp)
 
+add_executable(normal_distributions_transform src/chapter11/normal_distributions_transform.cpp)
+target_link_libraries(normal_distributions_transform ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+add_executable(interactive_icp src/chapter11/interactive_icp.cpp)
+target_link_libraries(interactive_icp ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
-add_executable(bspline_fitting src/chapter13/bspline_fitting.cpp)
-target_link_libraries(bspline_fitting ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+add_executable(alignment_prerejective src/chapter11/alignment_prerejective.cpp)
+target_link_libraries(alignment_prerejective ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+add_executable(template_alignment src/chapter11/template_alignment.cpp)
+target_link_libraries(template_alignment ${catkin_LIBRARIES} ${PCL_LIBRARIES})
+
+
+# add_executable(bspline_fitting src/chapter13/bspline_fitting.cpp)
+# target_link_libraries(bspline_fitting ${catkin_LIBRARIES} ${PCL_LIBRARIES})
 
 
 
