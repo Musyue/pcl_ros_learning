@@ -74,7 +74,8 @@ main (int argc, char *argv[])
 
   // initialize
   printf ("  surface fitting ...\n");
-  ON_NurbsSurface nurbs = pcl::on_nurbs::FittingSurface::initNurbsPCABoundingBox (order, &data);
+  ON_NurbsSurface nurbs = pcl::on_nurbs::FittingSurface::initNurbsP
+  CABoundingBox (order, &data);
   pcl::on_nurbs::FittingSurface fit (&data, nurbs);
   //  fit.setQuiet (false); // enable/disable debug output
 
